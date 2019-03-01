@@ -2,7 +2,7 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 41,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -18,17 +18,6 @@
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Import splinter and set the cromedriver path\n",
-    "executable_path = {'executable_path': 'chromedriver'}\n",
-    "browser = Browser('chrome', **executable_path, headless=False)"
-   ]
-  },
-  {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
@@ -37,20 +26,20 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 42,
    "metadata": {},
    "outputs": [],
    "source": [
     "def init_browser():\n",
     "    \"\"\" Connects path to chromedriver \"\"\"\n",
     "    \n",
-    "    executable_path = {'executable_path': '/Users/venessayeh/Downloads/chromedriver'}\n",
+    "    executable_path = {'executable_path': 'chromedriver.exe'}\n",
     "    return Browser(\"chrome\", **executable_path, headless=True)"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 43,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -60,24 +49,24 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 44,
    "metadata": {},
    "outputs": [],
    "source": [
-    "# Create a dictionary to hold all elements\n",
+    "# Create a python dictionary to hold all elements\n",
     "mars_info = {}"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 45,
    "metadata": {},
    "outputs": [],
    "source": [
     "# Use requests and BeautifulSoup to scrape Nasa News for latest news\n",
     "url = 'https://mars.nasa.gov/news/?page=0&per_page=40&order=publish_date+desc%2Ccreated_at+desc&search=&category=19%2C165%2C184%2C204&blank_scope=Latest'\n",
     "response = requests.get(url)\n",
-    "soup = bs(response.text, 'html.parser')\n",
+    "soup = bs(response.text, 'lxml')\n",
     "results = soup.find('div', class_='features')\n",
     "news_title = results.find('div', class_='content_title').text\n",
     "news_p = results.find('div', class_='rollover_description').text"
@@ -85,7 +74,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 46,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -103,7 +92,17 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 47,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Call on chromedriver function to use for splinter\n",
+    "browser = init_browser()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 48,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -111,19 +110,19 @@
     "JPL_url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'\n",
     "browser.visit(JPL_url)\n",
     "JPL_html = browser.html\n",
-    "JPL_soup = bs(JPL_html, 'html.parser')\n",
+    "JPL_soup = bs(JPL_html, 'lxml')\n",
     "featured_image = JPL_soup.find('div', class_='fancybox-image')\n",
     "featured_image_url = 'https:www.jpl.nasa.gov/spaceimages/images/mediumsize/PIA19631_ip.jpg'"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 49,
    "metadata": {},
    "outputs": [],
    "source": [
     "# Add results to dictionary\n",
-    "mars_info[\"image\"] = featured_image_url"
+    "mars_info[\"featured_image_url\"] = featured_image_url"
    ]
   },
   {
@@ -135,26 +134,26 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 50,
    "metadata": {},
    "outputs": [],
    "source": [
     "# Scrape Mars Weather twitter for latest weather report\n",
     "twitter_url = 'https://twitter.com/marswxreport?lang=en'\n",
     "twitter_response = requests.get(twitter_url)\n",
-    "twitter_soup = bs(twitter_response.text, 'html.parser')\n",
+    "twitter_soup = bs(twitter_response.text, 'lxml')\n",
     "twitter_result = twitter_soup.find('div', class_='js-tweet-text-container')\n",
     "mars_weather = twitter_result.find('p', class_='js-tweet-text').text"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 51,
    "metadata": {},
    "outputs": [],
    "source": [
     "# Add results to dictionary\n",
-    "mars_info[\"weather\"] = mars_weather"
+    "mars_info[\"mars_weather\"] = mars_weather"
    ]
   },
   {
@@ -166,7 +165,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 52,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -180,7 +179,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 53,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -192,7 +191,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 54,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -209,17 +208,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Call on chromedriver function to use for splinter\n",
-    "browser = init_browser()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 55,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -227,14 +216,14 @@
     "hemisphere_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'\n",
     "browser.visit(hemisphere_url)\n",
     "hemisphere_html = browser.html\n",
-    "hemisphere_soup = bs(hemisphere_html, 'html.parser')\n",
+    "hemisphere_soup = bs(hemisphere_html, 'lxml')\n",
     "base_url =\"https://astrogeology.usgs.gov\"\n",
     "image_list = hemisphere_soup.find_all('div', class_='item')"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 56,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -244,133 +233,52 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 57,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "ename": "SyntaxError",
+     "evalue": "'return' outside function (<ipython-input-57-deea137979d2>, line 33)",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;36m  File \u001b[1;32m\"<ipython-input-57-deea137979d2>\"\u001b[1;36m, line \u001b[1;32m33\u001b[0m\n\u001b[1;33m    return mars_info\u001b[0m\n\u001b[1;37m                    ^\u001b[0m\n\u001b[1;31mSyntaxError\u001b[0m\u001b[1;31m:\u001b[0m 'return' outside function\n"
+     ]
+    }
+   ],
    "source": [
     "# Loop through list of hemispheres and click on each one to find large resolution image\n",
-    "for image in image_list:"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Create a dicitonary to store urls and titles\n",
-    "hemisphere_dict = {}"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Find link to large image\n",
-    "href = image.find('a', class_='itemLink product-item')\n",
-    "link = base_url + href['href']"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Visit the link\n",
-    "browser.visit(link)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Wait 1 second \n",
-    "time.sleep(1)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Parse the html of the new page\n",
-    "hemisphere_html2 = browser.html\n",
-    "hemisphere_soup2 = bs(hemisphere_html2, 'html.parser')"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Find the title\n",
-    "img_title = hemisphere_soup2.find('div', class_='content').find('h2', class_='title').text"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Append to dict\n",
-    "hemisphere_dict['title'] = img_title"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Find image url\n",
-    "img_url = hemisphere_soup2.find('div', class_='downloads').find('a')['href']"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Append to dict\n",
-    "hemisphere_dict['url_img'] = img_url"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Append dict to list\n",
-    "hemisphere_image_urls.append(hemisphere_dict)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
+    "for image in image_list:\n",
+    "    \n",
+    "    # Create dictionary to store urls and titles\n",
+    "    hemisphere_dict = {}\n",
+    "    \n",
+    "    # Find link to large image and visit the link\n",
+    "    href = image.find('a', class_='itemLink product-item')\n",
+    "    link = base_url + href['href']\n",
+    "    browser.visit(link)\n",
+    "    \n",
+    "    # Wait one second\n",
+    "    time.sleep(1)\n",
+    "    \n",
+    "    # Parse the html of the new page\n",
+    "    hemisphere_html2 = browser.html\n",
+    "    hemisphere_soup2 = bs(hemisphere_html2, 'lxml')\n",
+    "    \n",
+    "    # Find the title and append to dictionary\n",
+    "    img_title = hemisphere_soup2.find('div', class_='content').find('h2', class_='title').text\n",
+    "    hemisphere_dict['title'] = img_title\n",
+    "    \n",
+    "    # Find image url and append to dictionary\n",
+    "    img_url = hemisphere_soup2.find('div', class_='downloads').find('a')['href']\n",
+    "    hemisphere_dict['url_img'] = img_url\n",
+    "    \n",
+    "    # Append dict to list\n",
+    "    hemisphere_image_urls.append(hemisphere_dict)\n",
+    "    \n",
     "# Add hemisphere image urls to dictionary\n",
-    "mars_info['hemisphere_image_urls'] = hemisphere_image_urls"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "return scrape_mars_dict"
+    "mars_info['hemisphere_image_urls'] = hemisphere_image_urls       \n",
+    "    \n",
+    "return mars_info"
    ]
   },
   {
